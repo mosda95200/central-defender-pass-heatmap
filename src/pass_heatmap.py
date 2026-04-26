@@ -496,3 +496,136 @@ def build_player_pass_dataset(
     player_passes = add_pass_features(player_passes)
 
     return player_passes
+
+def plot_pass_map(
+    passes: pd.DataFrame,
+    player_name: str,
+    team_name: Optional[str] = None,
+    match_label: Optional[str] = None,
+    match_date: Optional[str] = None,
+    source: str = "StatsBomb Open Data",
+    title: Optional[str] = None,
+):
+    """
+    Plot a pass map with successful passes in green
+    and unsuccessful passes in red.
+
+    Parameters
+    ----------
+    passes : pd.DataFrame
+        Prepared passes DataFrame with x, y, end_x, end_y and is_completed.
+    player_name : str
+        Selected player name.
+    team_name : str, optional
+        Team name for subtitle.
+    match_label : str, optional
+        Match label.
+    match_date : str, optional
+        Match date.
+    source : str
+        Data source.
+    title : str, optional
+        Custom title.
+
+    Returns
+    -------
+    tuple
+        Matplotlib figure and axis.
+    """
+    required_columns = ["x", "y", "end_x", "end_y", "is_completed"]
+
+    missing_columns = [
+        column for column in required_columns
+        if column not in passes.columns
+    ]
+
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {missing_columns}")
+
+    plot_data = passes.dropna(subset=["x", "y", "end_x", "end_y"]).copy()
+
+    completed = plot_data[plot_data["is_completed"]].copy()
+    incomplete = plot_data[~plot_data["is_completed"]].copy()
+
+    pitch = Pitch(
+        pitch_type="statsbomb",
+        pitch_color="#c7dfb4",
+        line_color="#8aa57a",
+        linewidth=1.2
+    )
+
+    fig, ax = pitch.draw(figsize=(12, 8))
+    fig.patch.set_facecolor("#c7dfb4")
+
+    # Successful passes
+    if len(completed) > 0:
+        pitch.arrows(
+            completed["x"],
+            completed["y"],
+            completed["end_x"],
+            completed["end_y"],
+            ax=ax,
+            color="#13b26b",
+            width=1.5,
+            headwidth=4,
+            headlength=4,
+            alpha=0.9,
+            label="Successful passes"
+        )
+
+    # Unsuccessful passes
+    if len(incomplete) > 0:
+        pitch.arrows(
+            incomplete["x"],
+            incomplete["y"],
+            incomplete["end_x"],
+            incomplete["end_y"],
+            ax=ax,
+            color="#d84b4b",
+            width=1.5,
+            headwidth=4,
+            headlength=4,
+            alpha=0.9,
+            label="Unsuccessful passes"
+        )
+
+    chart_title = title or f"Pass Map — {player_name}"
+
+    ax.set_title(
+        chart_title,
+        fontsize=18,
+        pad=18
+    )
+
+    subtitle_parts = []
+
+    if team_name:
+        subtitle_parts.append(team_name)
+
+    if match_label:
+        subtitle_parts.append(match_label)
+
+    if match_date:
+        subtitle_parts.append(str(match_date))
+
+    if source:
+        subtitle_parts.append(source)
+
+    if subtitle_parts:
+        fig.text(
+            0.5,
+            0.92,
+            " | ".join(subtitle_parts),
+            ha="center",
+            fontsize=10
+        )
+
+    legend = ax.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.02),
+        ncol=2,
+        frameon=False,
+        fontsize=10
+    )
+
+    return fig, ax
