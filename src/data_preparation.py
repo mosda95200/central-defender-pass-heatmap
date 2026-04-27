@@ -190,3 +190,37 @@ def calculate_pass_metrics(player_passes: pd.DataFrame) -> dict:
         "long_pass_share": long_pass_share,
         "average_pass_length": average_pass_length,
     }
+
+def create_metrics_dataframe(
+    metrics: dict,
+    player_name: str,
+    team_name: str,
+    position_name: str,
+    context: dict,
+) -> pd.DataFrame:
+    """
+    Create a one-row DataFrame containing player pass metrics and match context.
+    """
+    return pd.DataFrame(
+        [
+            {
+                "player": player_name,
+                "team": team_name,
+                "position": position_name,
+                "competition": context["competition_name"],
+                "season": context["season_name"],
+                "match": context["match_label"],
+                "match_date": context["match_date"],
+                "competition_stage": context["competition_stage"],
+                "total_passes": metrics["total_passes"],
+                "completed_passes": metrics["completed_passes"],
+                "incomplete_passes": metrics["incomplete_passes"],
+                "completion_rate": metrics["completion_rate"],
+                "forward_passes": metrics["forward_passes"],
+                "forward_pass_share": metrics["forward_pass_share"],
+                "long_passes": metrics["long_passes"],
+                "long_pass_share": metrics["long_pass_share"],
+                "average_pass_length": metrics["average_pass_length"],
+            }
+        ]
+    )

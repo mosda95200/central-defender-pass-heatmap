@@ -18,11 +18,13 @@ from src.data_preparation import (
     prepare_player_passes,
     create_clean_pass_dataset,
     calculate_pass_metrics,
+    create_metrics_dataframe,
 )
 from src.visualizations import (
     plot_pass_density_heatmap,
     plot_pass_map,
 )
+
 
 def main(config_path: str) -> None:
     config = load_config(config_path)
@@ -60,6 +62,25 @@ def main(config_path: str) -> None:
 
     heatmap_dir = ensure_directory("outputs/heatmaps")
     passmap_dir = ensure_directory("outputs/passmaps")
+    metrics_dir = ensure_directory("outputs/metrics")
+
+    metrics_df = create_metrics_dataframe(
+        metrics=metrics,
+        player_name=player_name,
+        team_name=team_name,
+        position_name=position_name,
+        context=context,
+    )
+
+    metrics_output = metrics_dir / f"{player_slug}_metrics.csv"
+
+    metrics_df.to_csv(
+        metrics_output,
+        index=False,
+        encoding="utf-8",
+    )
+
+    print(f"Metrics saved to: {metrics_output}")
 
     print("Analysis summary")
     print("----------------")

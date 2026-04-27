@@ -1,0 +1,2 @@
+player,team,position,competition,season,match,match_date,competition_stage,total_passes,completed_passes,incomplete_passes,completion_rate,forward_passes,forward_pass_share,long_passes,long_pass_share,average_pass_length
+Marc Guehi,England,Left Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,26,23,3,0.8846153846153846,17,0.6538461538461539,4,0.15384615384615385,18.88805806923077

@@ -1,0 +1,2 @@
+player,team,position,competition,season,match,match_date,competition_stage,total_passes,completed_passes,incomplete_passes,completion_rate,forward_passes,forward_pass_share,long_passes,long_pass_share,average_pass_length
+John Stones,England,Right Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,35,30,5,0.8571428571428571,23,0.6571428571428571,11,0.3142857142857143,27.687211085714292

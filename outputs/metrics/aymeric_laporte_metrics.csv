@@ -1,0 +1,2 @@
+player,team,position,competition,season,match,match_date,competition_stage,total_passes,completed_passes,incomplete_passes,completion_rate,forward_passes,forward_pass_share,long_passes,long_pass_share,average_pass_length
+Aymeric Laporte,Spain,Left Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,83,80,3,0.963855421686747,50,0.6024096385542169,19,0.2289156626506024,22.30162498554217

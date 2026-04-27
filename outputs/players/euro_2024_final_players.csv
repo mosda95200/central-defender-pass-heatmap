@@ -1,0 +1,30 @@
+competition_id,season_id,match_id,team,player_id,player_name,jersey_number,main_position
+55,282,3943043,England,3468,Jordan Pickford,1,Goalkeeper
+55,282,3943043,England,3205,Kyle Walker,2,Right Back
+55,282,3943043,England,3382,Luke Shaw,3,Left Back
+55,282,3943043,England,3943,Declan Rice,4,Left Defensive Midfield
+55,282,3943043,England,3244,John Stones,5,Right Center Back
+55,282,3943043,England,34526,Marc Guehi,6,Left Center Back
+55,282,3943043,England,22084,Bukayo Saka,7,Right Wing
+55,282,3943043,England,10955,Harry Kane,9,Center Forward
+55,282,3943043,England,30714,Jude Bellingham,10,Left Wing
+55,282,3943043,England,4354,Phil Foden,11,Center Attacking Midfield
+55,282,3943043,England,3834,Ivan Toney,17,Left Wing
+55,282,3943043,England,4760,Ollie Watkins,19,Center Forward
+55,282,3943043,England,39461,Cole Palmer,24,Right Defensive Midfield
+55,282,3943043,England,99174,Kobbie Mainoo,26,Right Defensive Midfield
+55,282,3943043,Spain,5721,Daniel Carvajal Ramos,2,Right Back
+55,282,3943043,Spain,22128,Robin Aime Robert Le Normand,3,Right Center Back
+55,282,3943043,Spain,5202,José Ignacio Fernández Iglesias,4,Right Center Back
+55,282,3943043,Spain,3042,Mikel Merino Zazón,6,Right Wing
+55,282,3943043,Spain,3477,Álvaro Borja Morata Martín,7,Center Forward
+55,282,3943043,Spain,6655,Fabián Ruiz Peña,8,Left Defensive Midfield
+55,282,3943043,Spain,16532,Daniel Olmo Carvajal,10,Center Attacking Midfield
+55,282,3943043,Spain,4353,Aymeric Laporte,14,Left Center Back
+55,282,3943043,Spain,6765,Rodrigo Hernández Cascante,16,Right Defensive Midfield
+55,282,3943043,Spain,68574,Nicholas Williams Arthuer,17,Left Wing
+55,282,3943043,Spain,24921,Martín Zubimendi Ibáñez,18,Right Defensive Midfield
+55,282,3943043,Spain,316046,Lamine Yamal Nasraoui Ebana,19,Right Wing
+55,282,3943043,Spain,6685,Mikel Oyarzabal Ugarte,21,Center Forward
+55,282,3943043,Spain,11748,Unai Simón Mendibil,23,Goalkeeper
+55,282,3943043,Spain,17620,Marc Cucurella Saseta,24,Left Back

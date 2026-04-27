@@ -1,0 +1,11 @@
+{
+  "competition_id": 55,
+  "season_id": 282,
+  "match_id": 3943043,
+  "player_name": "Aymeric Laporte",
+  "data_source": "StatsBomb Open Data",
+  "event_type": "Pass",
+  "analysis_type": "Pass density heatmap and pass map",
+  "generate_heatmap": true,
+  "generate_passmap": true
+}
