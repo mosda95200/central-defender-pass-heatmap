@@ -712,3 +712,12 @@ git commit -m "Update README with centre-back comparison workflow"
 ```bash
 git push
 ```
+
+## Rapport final
+
+Un rapport Markdown complet est généré automatiquement à partir des métriques et des visualisations.
+
+Fichier généré :
+
+```text
+outputs/reports/euro_2024_final_centre_backs_report.md
