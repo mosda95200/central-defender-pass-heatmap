@@ -4,12 +4,15 @@
 
 Ce projet est le premier projet d’un portfolio personnel dédié à l’analyse de données appliquée au football.
 
-L’objectif est d’analyser les passes d’un défenseur central à partir de données événementielles StatsBomb Open Data, puis de produire automatiquement deux visualisations :
+L’objectif est d’analyser les passes de défenseurs centraux à partir de données événementielles StatsBomb Open Data, puis de générer automatiquement plusieurs livrables analytiques :
 
-1. une **pass density heatmap** pour identifier les zones depuis lesquelles le joueur initie ses passes ;
-2. une **pass map** avec flèches pour visualiser la direction, la longueur et la réussite des passes.
+1. une **pass density heatmap** pour visualiser les zones depuis lesquelles un joueur initie ses passes ;
+2. une **pass map** avec flèches pour visualiser la direction, la longueur et la réussite des passes ;
+3. un fichier de **métriques individuelles** par joueur ;
+4. un fichier de **comparaison globale** entre défenseurs centraux ;
+5. des graphiques comparatifs pour interpréter les profils de relance.
 
-Le projet a été construit progressivement à partir de notebooks d’exploration, puis transformé en pipeline automatisé grâce à des scripts Python et des fichiers de configuration JSON.
+Le projet a d’abord été construit dans des notebooks d’exploration, puis transformé en pipeline automatisé avec des scripts Python et des fichiers de configuration JSON.
 
 ---
 
@@ -27,13 +30,14 @@ Le projet cherche à analyser :
 - la direction des passes ;
 - les passes vers l’avant ;
 - les passes longues ;
-- le rôle du joueur dans la première phase de construction.
+- la longueur moyenne des passes ;
+- les différences de profil entre défenseurs centraux.
 
 ---
 
 ## Objectif long terme
 
-À terme, l’objectif est d’appliquer cette méthode à plusieurs défenseurs centraux afin de comparer leurs profils de relance.
+À terme, l’objectif est d’appliquer cette méthode à plusieurs défenseurs centraux, sur différents matchs ou compétitions, afin de comparer leurs profils de relance.
 
 Le cas d’usage cible initial est l’analyse des défenseurs centraux de Manchester United lors de la saison 2025/2026 de Premier League, sous réserve de disponibilité d’une source de données événementielles compatible.
 
@@ -43,19 +47,37 @@ Cette première version utilise StatsBomb Open Data afin de construire une méth
 
 ## Cas analysé dans cette version
 
-Le premier cas automatisé porte sur :
+Cette version porte sur la finale de l’Euro 2024 entre l’Espagne et l’Angleterre.
 
 | Élément | Valeur |
 |---|---|
-| Joueur | Robin Aime Robert Le Normand |
 | Source | StatsBomb Open Data |
-| Competition ID | 52 |
+| Competition ID | 55 |
 | Season ID | 282 |
 | Match ID | 3943043 |
+| Match | Spain 2 - 1 England |
+| Date | 2024-07-14 |
 | Événement analysé | Passes |
-| Visualisations générées | Pass density heatmap, pass map |
+| Population analysée | Défenseurs centraux ayant participé au match |
+| Visualisations générées | Pass density heatmap, pass map, graphiques comparatifs |
 
-Les informations détaillées du match, de la compétition, de l’équipe et du score sont récupérées automatiquement depuis StatsBomb Open Data au moment de l’exécution du script.
+---
+
+## Joueurs analysés
+
+Les défenseurs centraux récupérés à partir des lineups StatsBomb sont :
+
+| Joueur | Équipe | Poste |
+|---|---|---|
+| John Stones | England | Right Center Back |
+| Marc Guéhi | England | Left Center Back |
+| Aymeric Laporte | Spain | Left Center Back |
+| José Ignacio Fernández Iglesias | Spain | Right Center Back |
+| Robin Aime Robert Le Normand | Spain | Right Center Back |
+
+Pour la comparaison principale, un filtre de volume minimum est appliqué afin d’éviter les échantillons trop faibles.
+
+Dans cette version, seuls les joueurs ayant effectué au moins 20 passes sont conservés dans la comparaison principale.
 
 ---
 
@@ -65,17 +87,25 @@ Les informations détaillées du match, de la compétition, de l’équipe et du
 
 La pass density heatmap représente les zones du terrain depuis lesquelles le joueur effectue le plus souvent ses passes.
 
-Cette visualisation utilise les coordonnées de départ des passes.
+Elle utilise les coordonnées de départ des passes :
 
 ```text
 x, y = point de départ de la passe
 ```
 
-Fichier généré :
+Les fichiers sont générés dans :
+
+```text
+outputs/heatmaps/
+```
+
+Exemple :
 
 ```text
 outputs/heatmaps/robin_aime_robert_le_normand_pass_density_heatmap.png
 ```
+
+---
 
 ### Pass map
 
@@ -85,7 +115,13 @@ La pass map représente chaque passe individuellement avec une flèche.
 - Les passes ratées sont affichées en rouge.
 - Chaque flèche va du point de départ au point d’arrivée de la passe.
 
-Fichier généré :
+Les fichiers sont générés dans :
+
+```text
+outputs/passmaps/
+```
+
+Exemple :
 
 ```text
 outputs/passmaps/robin_aime_robert_le_normand_pass_map.png
@@ -93,29 +129,108 @@ outputs/passmaps/robin_aime_robert_le_normand_pass_map.png
 
 ---
 
+### Graphiques comparatifs
+
+Les graphiques comparatifs sont générés à partir du fichier global de métriques.
+
+Ils permettent de comparer les défenseurs centraux selon plusieurs dimensions :
+
+- volume total de passes ;
+- taux de réussite ;
+- part des passes vers l’avant ;
+- part des passes longues ;
+- longueur moyenne des passes.
+
+Les fichiers sont générés dans :
+
+```text
+outputs/comparison_charts/
+```
+
+Exemples :
+
+```text
+outputs/comparison_charts/total_passes_comparison.png
+outputs/comparison_charts/completion_rate_comparison.png
+outputs/comparison_charts/forward_pass_share_comparison.png
+outputs/comparison_charts/long_pass_share_comparison.png
+outputs/comparison_charts/average_pass_length_comparison.png
+```
+
+---
+
 ## Métriques calculées
 
-Le projet calcule automatiquement plusieurs métriques de passes :
+Le projet calcule automatiquement les métriques suivantes pour chaque joueur :
 
 | Métrique | Description |
 |---|---|
-| Total passes | Nombre total de passes tentées |
-| Completed passes | Nombre de passes réussies |
-| Incomplete passes | Nombre de passes non réussies |
-| Completion rate | Taux de réussite des passes |
-| Forward passes | Nombre de passes vers l’avant |
-| Forward pass share | Part des passes vers l’avant |
-| Long passes | Nombre de passes longues |
-| Long pass share | Part des passes longues |
-| Average pass length | Longueur moyenne des passes |
+| `total_passes` | Nombre total de passes tentées |
+| `completed_passes` | Nombre de passes réussies |
+| `incomplete_passes` | Nombre de passes non réussies |
+| `completion_rate` | Taux de réussite des passes |
+| `forward_passes` | Nombre de passes vers l’avant |
+| `forward_pass_share` | Part des passes vers l’avant |
+| `long_passes` | Nombre de passes longues |
+| `long_pass_share` | Part des passes longues |
+| `average_pass_length` | Longueur moyenne des passes |
 
-Ces métriques sont affichées dans le terminal lors de l’exécution du script.
+Les métriques individuelles sont exportées dans :
+
+```text
+outputs/metrics/
+```
+
+Exemple :
+
+```text
+outputs/metrics/robin_aime_robert_le_normand_metrics.csv
+```
+
+Le fichier de comparaison global est exporté dans :
+
+```text
+outputs/metrics/euro_2024_final_centre_backs_comparison.csv
+```
+
+Une version filtrée est également produite pour la comparaison principale :
+
+```text
+outputs/metrics/euro_2024_final_centre_backs_comparison_filtered.csv
+```
+
+---
+
+## Résultats de comparaison
+
+Après filtrage des joueurs ayant effectué au moins 20 passes, la comparaison principale porte sur :
+
+| Joueur | Équipe | Total passes | Completed passes | Completion rate | Forward pass share | Long pass share | Average pass length |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Robin Aime Robert Le Normand | Spain | 84 | 80 | 95.2% | 77.4% | 13.1% | 21.9 |
+| Aymeric Laporte | Spain | 83 | 80 | 96.4% | 60.2% | 22.9% | 22.3 |
+| John Stones | England | 35 | 30 | 85.7% | 65.7% | 31.4% | 27.7 |
+| Marc Guéhi | England | 26 | 23 | 88.5% | 65.4% | 15.4% | 18.9 |
+
+José Ignacio Fernández Iglesias est bien présent dans les données, mais il n’est pas conservé dans la comparaison principale car son volume de passes est trop faible.
+
+---
+
+## Première lecture analytique
+
+Robin Aime Robert Le Normand et Aymeric Laporte sont les deux défenseurs centraux les plus impliqués dans la circulation du ballon lors de ce match, avec respectivement 84 et 83 passes.
+
+Robin Le Normand présente le volume de passes le plus élevé et la plus forte part de passes vers l’avant parmi les joueurs conservés dans la comparaison. Cela suggère une forte implication dans la progression du jeu espagnol.
+
+Aymeric Laporte affiche le meilleur taux de réussite parmi les défenseurs centraux principaux, tout en conservant un volume de passes très élevé. Son profil apparaît donc plus sécurisé, avec une forte fiabilité dans la première relance.
+
+John Stones présente la plus forte part de passes longues et la longueur moyenne de passe la plus élevée. Cela peut indiquer un profil plus direct dans ce match, avec davantage de passes longues ou de changements d’orientation.
+
+Marc Guéhi présente un volume de passes plus faible, ce qui peut refléter une moindre possession anglaise ou un rôle plus limité dans la construction depuis l’arrière.
 
 ---
 
 ## Stack technique
-
-Le projet utilise Python et plusieurs bibliothèques spécialisées dans l’analyse de données et la visualisation football.
 
 ### Langage
 
@@ -154,23 +269,33 @@ ipykernel
 central-defender-pass-heatmap/
 │
 ├── configs/
-│   └── robin_le_normand.json
+│   ├── robin_le_normand.json
+│   │
+│   └── generated/
+│       └── euro_2024_final/
+│           ├── england_john_stones.json
+│           ├── england_marc_guehi.json
+│           ├── spain_aymeric_laporte.json
+│           ├── spain_jose_ignacio_fernandez_iglesias.json
+│           └── spain_robin_aime_robert_le_normand.json
 │
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb
 │   ├── 02_pass_density_heatmap.ipynb
-│   └── 03_pass_map.ipynb
+│   ├── 03_pass_map.ipynb
+│   └── 04_centre_back_comparison.ipynb
 │
 ├── outputs/
 │   ├── heatmaps/
-│   │   └── robin_aime_robert_le_normand_pass_density_heatmap.png
-│   │
-│   └── passmaps/
-│       └── robin_aime_robert_le_normand_pass_map.png
+│   ├── passmaps/
+│   ├── metrics/
+│   └── comparison_charts/
 │
 ├── scripts/
 │   ├── generate_player_pass_analysis.py
-│   └── run_all_configs.py
+│   ├── generate_configs_from_lineups.py
+│   ├── run_all_configs.py
+│   └── build_metrics_comparison.py
 │
 ├── src/
 │   ├── __init__.py
@@ -191,7 +316,7 @@ central-defender-pass-heatmap/
 
 Ce dossier contient les fichiers de configuration JSON utilisés pour automatiser les analyses.
 
-Chaque fichier de configuration définit :
+Chaque fichier définit :
 
 - la compétition ;
 - la saison ;
@@ -203,7 +328,7 @@ Exemple :
 
 ```json
 {
-  "competition_id": 52,
+  "competition_id": 55,
   "season_id": 282,
   "match_id": 3943043,
   "player_name": "Robin Aime Robert Le Normand",
@@ -219,15 +344,14 @@ Exemple :
 
 ### `notebooks/`
 
-Ce dossier contient les notebooks d’exploration.
+Ce dossier contient les notebooks d’exploration et d’analyse.
 
 | Notebook | Rôle |
 |---|---|
 | `01_data_exploration.ipynb` | Exploration initiale et préparation des données |
 | `02_pass_density_heatmap.ipynb` | Prototypage de la heatmap de densité |
 | `03_pass_map.ipynb` | Prototypage de la pass map avec flèches |
-
-Les notebooks servent à comprendre, tester et valider les étapes avant de les intégrer dans le pipeline automatisé.
+| `04_centre_back_comparison.ipynb` | Comparaison des défenseurs centraux |
 
 ---
 
@@ -237,14 +361,15 @@ Ce dossier contient le code Python réutilisable du projet.
 
 #### `data_preparation.py`
 
-Contient les fonctions de chargement et de préparation des données :
+Contient les fonctions de chargement, nettoyage et transformation des données :
 
 - chargement du contexte de match ;
 - chargement des événements StatsBomb ;
 - filtrage des passes ;
 - extraction des coordonnées ;
 - création des features ;
-- calcul des métriques.
+- calcul des métriques ;
+- création du DataFrame de métriques.
 
 #### `visualizations.py`
 
@@ -252,8 +377,6 @@ Contient les fonctions de visualisation :
 
 - `plot_pass_density_heatmap()`
 - `plot_pass_map()`
-
-Ces fonctions génèrent les deux visualisations principales du projet.
 
 #### `utils.py`
 
@@ -267,49 +390,52 @@ Contient les fonctions utilitaires :
 
 ### `scripts/`
 
-Ce dossier contient les scripts d’exécution automatique.
+Ce dossier contient les scripts d’automatisation.
 
 #### `generate_player_pass_analysis.py`
 
-Script principal permettant de générer automatiquement les visualisations pour un joueur à partir d’un fichier de configuration JSON.
+Génère automatiquement les visualisations et les métriques pour un joueur à partir d’un fichier JSON.
 
-Exemple d’exécution :
+Commande :
 
 ```bash
 python scripts/generate_player_pass_analysis.py --config configs/robin_le_normand.json
 ```
 
+#### `generate_configs_from_lineups.py`
+
+Génère automatiquement les fichiers JSON des joueurs à partir des lineups StatsBomb.
+
+Commande pour générer les configs des défenseurs centraux de la finale :
+
+```bash
+python scripts/generate_configs_from_lineups.py --competition-id 55 --season-id 282 --match-id 3943043 --position-filter "Center Back"
+```
+
 #### `run_all_configs.py`
 
-Script permettant d’exécuter automatiquement toutes les configurations présentes dans le dossier `configs/`.
+Exécute automatiquement toutes les configurations JSON trouvées dans un dossier.
 
-Exemple d’exécution :
+Commande :
 
 ```bash
 python scripts/run_all_configs.py
 ```
 
----
+Commande pour exécuter uniquement les configs générées pour la finale :
 
-### `outputs/`
-
-Ce dossier contient les fichiers générés automatiquement.
-
-```text
-outputs/heatmaps/
-outputs/passmaps/
+```bash
+python scripts/run_all_configs.py --config-dir configs/generated/euro_2024_final
 ```
 
-Les heatmaps sont générées dans :
+#### `build_metrics_comparison.py`
 
-```text
-outputs/heatmaps/
-```
+Agrège les fichiers de métriques individuels dans un fichier global de comparaison.
 
-Les pass maps sont générées dans :
+Commande :
 
-```text
-outputs/passmaps/
+```bash
+python scripts/build_metrics_comparison.py
 ```
 
 ---
@@ -351,65 +477,65 @@ pip install -r requirements.txt
 
 ---
 
-## Utilisation
+## Utilisation du projet
 
-### Générer les visualisations pour Robin Le Normand
-
-Depuis la racine du projet :
+### Générer l’analyse pour un joueur
 
 ```bash
 python scripts/generate_player_pass_analysis.py --config configs/robin_le_normand.json
 ```
 
-Le script effectue automatiquement les étapes suivantes :
+---
 
-1. chargement du fichier de configuration ;
-2. chargement du contexte de compétition et de match ;
-3. chargement des événements StatsBomb ;
-4. filtrage des passes du joueur ;
-5. préparation des coordonnées ;
-6. calcul des métriques ;
-7. génération de la pass density heatmap ;
-8. génération de la pass map ;
-9. export des images dans le dossier `outputs/`.
+### Générer les fichiers de configuration depuis les lineups
+
+```bash
+python scripts/generate_configs_from_lineups.py --competition-id 55 --season-id 282 --match-id 3943043 --position-filter "Center Back"
+```
 
 ---
 
-## Exemple de sortie terminal
+### Générer les analyses pour tous les joueurs configurés
 
-```text
-Loading analysis context...
-Preparing player passes...
-Analysis summary
-----------------
-Player: Robin Aime Robert Le Normand
-Team: ...
-Position: ...
-Competition: ...
-Season: ...
-Match: ...
-Date: ...
-Total passes: ...
-Completed passes: ...
-Completion rate: ...
-Generating pass density heatmap...
-Heatmap saved to: outputs/heatmaps/robin_aime_robert_le_normand_pass_density_heatmap.png
-Generating pass map...
-Pass map saved to: outputs/passmaps/robin_aime_robert_le_normand_pass_map.png
-Done.
+```bash
+python scripts/run_all_configs.py --config-dir configs/generated/euro_2024_final
 ```
 
-Les valeurs exactes sont récupérées automatiquement depuis StatsBomb Open Data.
+---
+
+### Construire le fichier global de comparaison
+
+```bash
+python scripts/build_metrics_comparison.py
+```
+
+---
+
+## Pipeline complet
+
+Le pipeline complet se lance dans cet ordre :
+
+```bash
+python scripts/generate_configs_from_lineups.py --competition-id 55 --season-id 282 --match-id 3943043 --position-filter "Center Back"
+
+python scripts/run_all_configs.py --config-dir configs/generated/euro_2024_final
+
+python scripts/build_metrics_comparison.py
+```
+
+Ensuite, le notebook suivant permet d’explorer et d’interpréter les résultats :
+
+```text
+notebooks/04_centre_back_comparison.ipynb
+```
 
 ---
 
 ## Méthodologie
 
-Le pipeline suit les étapes suivantes.
-
 ### 1. Chargement des données
 
-Les données sont chargées avec `statsbombpy` à partir des identifiants suivants :
+Les données sont chargées avec `statsbombpy` à partir des identifiants :
 
 ```text
 competition_id
@@ -417,15 +543,31 @@ season_id
 match_id
 ```
 
-### 2. Filtrage des passes
+### 2. Récupération des joueurs
 
-Les événements sont filtrés pour ne conserver que les passes :
+Les joueurs sont récupérés via les lineups du match :
+
+```python
+sb.lineups(match_id=match_id)
+```
+
+### 3. Filtrage des défenseurs centraux
+
+Les joueurs sont filtrés sur la position :
+
+```text
+Center Back
+```
+
+### 4. Filtrage des passes
+
+Les événements sont filtrés pour conserver uniquement :
 
 ```python
 events[events["type"] == "Pass"]
 ```
 
-### 3. Sélection du joueur
+### 5. Sélection du joueur
 
 Les passes sont ensuite filtrées sur le nom exact du joueur :
 
@@ -433,7 +575,7 @@ Les passes sont ensuite filtrées sur le nom exact du joueur :
 passes[passes["player"] == player_name]
 ```
 
-### 4. Préparation des coordonnées
+### 6. Préparation des coordonnées
 
 Les coordonnées StatsBomb sont transformées en colonnes exploitables :
 
@@ -442,9 +584,9 @@ location           -> x, y
 pass_end_location  -> end_x, end_y
 ```
 
-### 5. Création des features
+### 7. Création des features
 
-Le projet ajoute plusieurs variables utiles :
+Le projet ajoute plusieurs variables :
 
 ```text
 is_completed
@@ -454,16 +596,20 @@ is_forward_pass
 is_long_pass
 ```
 
-### 6. Calcul des métriques
+### 8. Calcul des métriques
 
 Les métriques principales sont calculées à partir du DataFrame préparé.
 
-### 7. Génération des visualisations
+### 9. Génération des visualisations
 
-Deux visualisations sont générées :
+Deux visualisations sont générées automatiquement :
 
-- une heatmap de densité des points de départ des passes ;
-- une pass map avec flèches.
+- pass density heatmap ;
+- pass map.
+
+### 10. Comparaison entre joueurs
+
+Les métriques individuelles sont agrégées dans un fichier global, puis utilisées pour comparer les défenseurs centraux.
 
 ---
 
@@ -471,53 +617,76 @@ Deux visualisations sont générées :
 
 Cette version du projet présente plusieurs limites :
 
-- l’analyse porte sur un seul joueur ;
 - l’analyse porte sur un seul match ;
-- les visualisations ne prennent pas encore en compte le contexte tactique complet ;
-- les passes progressives sont approximées à partir de la progression en `x` ;
+- les conclusions ne doivent pas être généralisées à toute une saison ;
 - les passes longues sont définies avec un seuil simple de `pass_length >= 30` ;
-- les métriques ne sont pas encore exportées dans un fichier CSV.
+- les passes vers l’avant sont approximées avec `end_x > x` ;
+- le contexte tactique global du match n’est pas encore intégré ;
+- le volume de passes varie fortement selon le temps de jeu et le scénario du match ;
+- la comparaison principale exclut les joueurs avec un volume de passes trop faible.
 
 ---
 
 ## Prochaines évolutions prévues
 
-Les prochaines évolutions logiques du projet sont :
+Les prochaines évolutions possibles sont :
 
-1. exporter automatiquement les métriques dans un fichier CSV ;
-2. automatiser l’analyse de plusieurs joueurs ;
-3. comparer plusieurs défenseurs centraux ;
-4. ajouter un notebook de comparaison ;
-5. enrichir les métriques avec les passes progressives ;
-6. améliorer la documentation analytique dans le README ;
-7. préparer une version portfolio publiable.
+1. ajouter un vrai calcul de passes progressives ;
+2. intégrer le temps de jeu pour normaliser les métriques ;
+3. comparer les métriques par 90 minutes ;
+4. automatiser la génération d’un rapport Markdown ;
+5. améliorer les graphiques comparatifs ;
+6. ajouter une analyse par zones du terrain ;
+7. appliquer le pipeline à plusieurs matchs ;
+8. appliquer le pipeline à une compétition entière ;
+9. adapter le projet à une future source de données Manchester United.
 
 ---
 
 ## Statut du projet
 
 ```text
-Statut : version automatisée fonctionnelle
-Visualisations : heatmap + pass map
+Statut : pipeline automatisé fonctionnel
 Source : StatsBomb Open Data
-Automatisation : configuration JSON + script Python
-Cas validé : Robin Aime Robert Le Normand
+Match analysé : Finale Euro 2024, Espagne 2 - 1 Angleterre
+Population : défenseurs centraux
+Visualisations : heatmap, pass map, graphiques comparatifs
+Automatisation : fichiers JSON + scripts Python
+Comparaison : fichier global de métriques + notebook dédié
 ```
 
 ---
 
 ## Commandes utiles
 
-### Lancer l’analyse principale
+### Lancer Jupyter Lab
+
+```bash
+jupyter lab
+```
+
+### Lancer l’analyse d’un joueur
 
 ```bash
 python scripts/generate_player_pass_analysis.py --config configs/robin_le_normand.json
 ```
 
-### Lancer toutes les configurations
+### Générer les configs depuis les lineups
 
 ```bash
-python scripts/run_all_configs.py
+python scripts/generate_configs_from_lineups.py --competition-id 55 --season-id 282 --match-id 3943043 --position-filter "Center Back"
+```
+
+### Lancer toutes les analyses
+
+```bash
+python scripts/run_all_configs.py --config-dir configs/generated/euro_2024_final
+```
+
+### Créer le fichier de comparaison
+
+```bash
+python scripts/build_metrics_comparison.py
 ```
 
 ### Vérifier l’état Git
@@ -526,7 +695,7 @@ python scripts/run_all_configs.py
 git status
 ```
 
-### Ajouter tous les changements
+### Ajouter les changements
 
 ```bash
 git add -A
@@ -535,7 +704,7 @@ git add -A
 ### Créer un commit
 
 ```bash
-git commit -m "Update README with automated pass analysis workflow"
+git commit -m "Update README with centre-back comparison workflow"
 ```
 
 ### Envoyer sur GitHub
