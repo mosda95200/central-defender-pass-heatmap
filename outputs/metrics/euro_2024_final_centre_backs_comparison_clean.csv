@@ -1,0 +1,6 @@
+player,team,position,total_passes,completed_passes,incomplete_passes,completion_rate_pct,forward_passes,forward_pass_share_pct,long_passes,long_pass_share_pct,average_pass_length
+Robin Aime Robert Le Normand,Spain,Right Center Back,84,80,4,95.2,65,77.4,11,13.1,21.9
+Aymeric Laporte,Spain,Left Center Back,83,80,3,96.4,50,60.2,19,22.9,22.3
+John Stones,England,Right Center Back,35,30,5,85.7,23,65.7,11,31.4,27.7
+Marc Guehi,England,Left Center Back,26,23,3,88.5,17,65.4,4,15.4,18.9
+José Ignacio Fernández Iglesias,Spain,Right Center Back,3,3,0,100.0,3,100.0,0,0.0,18.1
