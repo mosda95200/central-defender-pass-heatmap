@@ -1,0 +1,6 @@
+player,team,position,competition,season,match,match_date,competition_stage,total_passes,completed_passes,incomplete_passes,completion_rate,forward_passes,forward_pass_share,long_passes,long_pass_share,average_pass_length,source_file
+John Stones,England,Right Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,35,30,5,0.8571428571428571,23,0.6571428571428571,11,0.3142857142857143,27.68721108571429,john_stones_metrics.csv
+Marc Guehi,England,Left Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,26,23,3,0.8846153846153846,17,0.6538461538461539,4,0.1538461538461538,18.88805806923077,marc_guehi_metrics.csv
+Aymeric Laporte,Spain,Left Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,83,80,3,0.963855421686747,50,0.6024096385542169,19,0.2289156626506024,22.30162498554217,aymeric_laporte_metrics.csv
+José Ignacio Fernández Iglesias,Spain,Right Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,3,3,0,1.0,3,1.0,0,0.0,18.092738,jose_ignacio_fernandez_iglesias_metrics.csv
+Robin Aime Robert Le Normand,Spain,Right Center Back,UEFA Euro,2024,Spain 2 - 1 England,2024-07-14,Final,84,80,4,0.9523809523809524,65,0.7738095238095238,11,0.1309523809523809,21.857340009523814,robin_aime_robert_le_normand_metrics.csv
