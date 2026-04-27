@@ -1,0 +1,6 @@
+insight,player,team,value,metric
+Most involved in possession,Robin Aime Robert Le Normand,Spain,84.0,total_passes
+Best pass completion rate,Aymeric Laporte,Spain,96.4,completion_rate_pct
+Highest forward pass share,Robin Aime Robert Le Normand,Spain,77.4,forward_pass_share_pct
+Highest long pass share,John Stones,England,31.4,long_pass_share_pct
+Longest average pass length,John Stones,England,27.7,average_pass_length
